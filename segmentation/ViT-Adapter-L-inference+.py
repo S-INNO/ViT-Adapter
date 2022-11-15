@@ -114,7 +114,7 @@ def single_img_inference(model, img_path, out_folder, palette, opacity):
     cv2.imwrite(out_png_path, img)
     out_npy_name = out_name + ".npy"
     out_npy_path = osp.join(out_folder, out_npy_name)
-    result_np = result[0].astype("uint8")
+    result_np = np.uint8(result) + 1
     np.save(out_npy_path, result_np)
     # cv2.imwrite(out_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])  无损png
     print(f"Result is save at {out_folder}")
