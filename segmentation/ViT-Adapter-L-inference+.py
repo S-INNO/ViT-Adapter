@@ -90,9 +90,9 @@ def visualize_result(pred, img_name):
     for idx in np.argsort(counts)[::-1]:  # 将count列表中的元素值从大到小排列，给出对应元素的序号
         name = names[uniques[idx] + 1]
         ratio = counts[idx] / pixs * 100
-        if ratio > 0.1:
-            print("  {}: {:.2f}%".format(name, ratio))
-            unique_ratio.append([default_dump(uniques[idx] + 1), round(default_dump(ratio), 2)])
+        # if ratio > 0.1:
+        print("  {}: {:.2f}%".format(name, ratio))
+        unique_ratio.append([default_dump(name), round(default_dump(ratio), 2)])
     result2save[img_name] = unique_ratio
 
 
@@ -108,10 +108,16 @@ def single_img_inference(model, img_path, out_folder, palette, opacity):
                             palette=get_palette(palette),
                             show=False, opacity=opacity)
     mmcv.mkdir_or_exist(out_folder)
-    out_name= osp.splitext(osp.basename(img_path))[0] + ".png"
-    out_path = osp.join(out_folder, out_name)
-    cv2.imwrite(out_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-    print(f"Result is save at {out_path}")
+    out_name= osp.splitext(osp.basename(img_path))[0]
+    out_png_name =  out_name + ".png"
+    out_png_path = osp.join(out_folder, out_png_name)
+    cv2.imwrite(out_png_path, img)
+    out_npy_name = out_name + ".npy"
+    out_npy_path = osp.join(out_folder, out_npy_name)
+    result_np = result[0].astype("uint8")
+    np.save(out_npy_path, result_np)
+    # cv2.imwrite(out_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])  无损png
+    print(f"Result is save at {out_folder}")
     # save json
     json_fp = osp.join(out_folder, "ImgDict.json")
     with open(json_fp, 'w') as f:
