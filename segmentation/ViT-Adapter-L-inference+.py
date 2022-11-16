@@ -102,6 +102,7 @@ def single_img_inference(model, img_path, out_folder, palette, opacity):
     file_name = osp.basename(img_path)
     visualize_result(result, file_name)
     out_name= osp.splitext(osp.basename(img_path))[0]
+    mmcv.mkdir_or_exist(out_folder)
     """
     # show the results
     if hasattr(model, 'module'):
@@ -109,7 +110,6 @@ def single_img_inference(model, img_path, out_folder, palette, opacity):
     img = model.show_result(img_path, result,
                             palette=get_palette(palette),
                             show=False, opacity=opacity)
-    mmcv.mkdir_or_exist(out_folder)
     out_png_name =  out_name + ".png"
     out_png_path = osp.join(out_folder, out_png_name)
     cv2.imwrite(out_png_path, img)
